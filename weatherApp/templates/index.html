@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+<div class="flex flex-col justify-center items-center" style="margin-bottom: 2rem;">
+  <div class="flex flex-row justify-center items-center pb-8 mt-24" style="padding-bottom: 2rem;">
+    <form method="POST">
+      {% csrf_token %} 
+      <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
+      <div class="flex flex-row justify-center h-12" classname="buscador">
+
+          <input type="search" classname="input-index" id="default-search" name="city"  class=" block w-64 h-12  text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search city..." required>
+          <button type="submit" style="padding: 10px;" class="text-white right-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Search</button>
+      </div>
+    </form>
+  </div>
+  {#block to title and subtitle#}
+  <div class=" w-4/6 lg:w-2/6 " style="padding-top: 2rem;border-radius: 1rem;background: linear-gradient(180deg, rgba(33,79,109,1) 0%, rgba(8,35,61,1) 100%);padding: 2rem;">
+    <div class="flex justify-center items-center flex-col" style="padding-bottom: 1rem;">
+      <h2 class="text-white" style="font-size: 20px; font-weight: 600;">Meteorologia Actual {{city}}</h2>
+      <span class="text-white" style="font-size: 13px; font-weight: 300;">{{fecha}}</span>
+    </div>
+    {# block to img and temp °C + Detail and Sensacion termica#}
+    <div class="flex lg:flex-row justify-center flex-col items-center">
+      <div class="flex ">
+      <img src="https://api.openweathermap.org/img/w/{{icon}}.png" width="100px"/>
+      <h1 style="font-size: 4rem; padding-right: 2rem;" class="text-white" >{{temp}}°C</h1>
+      </div>
+      <div class="flex flex-col">
+        <h2 class="text-white font-medium text-base" style="font-size: 20px; font-weight: 600;">{{description}}</h2>
+        <h2 class="text-white font-medium text-base" style="font-size: 16px; font-weight: 400;">
+          <img src="https://img.icons8.com/nolan/16/temperature.png"/> Sensacion térmica °F</h2>
+      </div>
+    </div>
+    <div class="flex justify-center items-center" >
+      <h1 class="text-white font-medium text-base" style="font-size: 16px; font-weight: 400;">El mínimo alcanzará los</h1>
+    </div>
+    <div class="flex justify-center items-center flex-col lg:flex-row">
+        <div class="flex flex-col p-2" >
+          <h1 class="text-white">
+            <img src="https://img.icons8.com/windows/32/FFFFFF/wind.png" style="color: #ff5757;"/></i>Wind
+          </h1>
+          <h1 class="text-white">{{wind}}</h1>
+        </div>
+        <div class="flex flex-col justify-center items-center p-2">
+          <h1 class="text-white flex flex-col justify-center items-center ">
+            <img class="flex justify-center items-center" src="https://img.icons8.com/ios/30/FFFFFF/humidity.png"  /></i>Humedad</h1>
+          <h1 class="text-white">{{ humidity }}</h1>
+        </div>
+        <div class="flex flex-col justify-center items-center p-2">
+          <h1 class="text-white flex flex-col justify-center items-center "><img src="https://img.icons8.com/ios-filled/30/FFFFFF/visible--v1.png"/></i>Visibilidad</h1>
+          <h1 class="text-white">{{visibility}}</h1>
+        </div>
+        <div class="flex flex-col items-center p-2">
+          <h1 class="text-white flex flex-col justify-center items-center ">
+            <img src="https://img.icons8.com/ios/30/FFFFFF/atmospheric-pressure.png"/></i>Presión</h1>
+          <h1 class="text-white">{{ pressure }}</h1>
+        </div>
+        <div class="lg:flex hidden flex-col space-x-4 p-4">
+          <h1 class="text-white pb-4 pt-4 ">Punto de condensación</h1>
+          <h1 class="text-white">Valor</h1>
+        </div>
+    </div>
+  </div>
+</div>
+
+{# start the table with content#}
+<div class=" overflow-x-auto flex justify-center shadow-md sm:rounded-lg" style="margin-bottom: 2rem; margin: 1rem; ">
+ 
+    <table class="w-1/5 lg:w-7/12  text-sm text-center" style="border-radius: 1rem; background: linear-gradient(180deg, rgba(33,79,109,1) 0%, rgba(8,35,61,1) 100%);">
+      <thead class="text-xs text-white uppercase">
+          <tr>
+              <th scope="col" class="px-.5 sm:px-6 py-3">
+                  Date
+              </th>
+              <th scope="col" class="px-.5 sm:px-6 py-3">
+                Description
+              </th>
+              <th scope="col" class="px-.5 sm:px-6 py-3" style="text-align: start;">
+                Temperature in C°
+              </th>
+              <th scope="col" class="px-.5 sm:px-6 py-3" style="text-align: start;">
+                Temperature in F°
+              </th>
+              <th scope="col" class="px-.5 sm:px-6 py-3" style="text-align: start;">
+                State
+              </th>
+          </tr>
+      </thead>
+      <tbody class="" style="background: linear-gradient(180deg, rgba(33,79,109,1) 0%, rgba(8,35,61,1) 100%);">
+        {% for day in data_clima %}
+          <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+              <th scope="row" class="px-.5 sm:px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                  {{ day.fecha }}
+              </th>
+              <th scope="row" class="px-.5 sm:px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                {{ day.description }}
+            </th>
+              <td class="px-.5 sm:px-6 py-4">
+                {{ day.temp }}
+              </td>
+              <td class="px-.5 sm:px-6 py-4">
+                {{ day.temp_farenheit }}
+              </td>
+              <td class="px-.5 sm:px-6 py-4">
+                <img src="https://api.openweathermap.org/img/w/{{ day.icon }}.png" width="30px"/>
+              </td>
+          </tr>
+          {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+</div>
+{% endblock content %}
+
+
